@@ -31,6 +31,6 @@ const corsOpts = {
 
 app.use(cors(corsOpts))
 
-app.listen(port, () => {
+http.listen(port, () => {
   console.log('app started!')
 })
