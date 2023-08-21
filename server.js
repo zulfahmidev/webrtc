@@ -17,7 +17,7 @@ let iceCandidateQueues = {}
 let argv = minimist(process.argv.slice(2), {
   default: {
     as_url: 'http://localhost:3000',
-    ws_uri: 'ws://https://kurento-cc5qplbn3a-uc.a.run.app/kurento',
+    ws_uri: 'ws://https://kurento-cc5qplbn3a-uc.a.run.app:8888/kurento',
   }
 })
 
