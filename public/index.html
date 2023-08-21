@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebRTC Multiparty</title>
+  <style>
+    #meetingRoom div {
+      text-align: center;
+    }
+
+    .videoContainer {
+      float: left;
+    }
+    #meetingRoom::after {
+      content: '';
+      display: block;
+      clear: both;
+    }
+  </style>
+</head>
+<body>
+  <h1>WebRTC Multiparty</h1>
+  <div id="roomSelection" style="display: block;">
+    <label for="name">Type User Name</label>
+    <input type="text" id="name">
+    <label for="room">Type Room Name</label>
+    <input type="text" id="room">
+    <button id="register">Enter</button>
+  </div>
+
+  <div id="meetingRoom" style="display: none"></div>
+
+  <script src="adapter-latest.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/kurento-js-utils@6.16.0/kurento-utils.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="client.js"></script>
+</body>
+</html>
