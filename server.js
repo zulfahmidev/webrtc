@@ -17,7 +17,7 @@ let iceCandidateQueues = {}
 
 let argv = minimist(process.argv.slice(2), {
   default: {
-    as_url: 'http://0.0.0.0:3000',
+    as_url: 'http://0.0.0.0:80',
     // ws_uri: 'ws://localhost:8888/kurento',
     ws_uri: 'ws://webrtc.zulfahmidev.com:8888/kurento',
   }
@@ -285,6 +285,6 @@ app.use(cors(corsOpts))
 
 app.use(express.static(path.join(__dirname, 'public')))
 
-http.listen(3000, () => {
-  console.log('App listen at http://192.168.226.33:3000')
+http.listen(80, () => {
+  console.log('App listen at http://192.168.226.33:80')
 })
