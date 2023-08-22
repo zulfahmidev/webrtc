@@ -16,15 +16,14 @@ let iceCandidateQueues = {}
 
 let argv = minimist(process.argv.slice(2), {
   default: {
-    as_url: 'http://localhost:3000',
+    as_url: 'http://0.0.0.0:3000',
     // ws_uri: 'ws://localhost:8888/kurento',
-    ws_uri: 'ws://kurento-cc5qplbn3a-uc.a.run.app/kurento',
+    ws_uri: 'ws://34.101.228.110:8888/kurento',
   }
 })
 
 io.on('connection', socket => {
  socket.on('message', message => {
-  // console.log(message)
   switch (message.event) {
     case 'joinRoom':
       joinRoom(socket, message.userName, message.roomName, err => {
@@ -70,7 +69,6 @@ function joinRoom(socket, username, roomname, callback) {
 
       let iceCandidateQueue = iceCandidateQueues[user.id]
 
-      console.log('join', iceCandidateQueue)
       if (iceCandidateQueue) {
         while (iceCandidateQueue.length) {
           let ice = iceCandidateQueue.shift()
@@ -118,16 +116,28 @@ function joinRoom(socket, username, roomname, callback) {
 }
 
 function getKurentoCLient(callback) {
+  console.log('a')
   if (kurentoClient !== null) {
+    console.log('b')
     return callback(null, kurentoClient)
   }
-  kurento(argv.ws_uri, (err, _kurentoClient) => {
+  console.log('c', argv.ws_uri)
+  let a = kurento(argv.ws_uri, (err, _kurentoClient) => {
+    console.log('d')
     if (err) {
+      console.log('e')
       return callback(err)
     }
     kurentoClient = _kurentoClient
     return callback(null, kurentoClient)
+  }).then((v) => {
+    console.log(v)
+  }).catch((res) => {
+    console.log(res)
+  }).finally(() => {
+    console.log('aaa')
   })
+  // console.log(a)
 }
 
 function getRoom(socket, roomname, callback) {
@@ -176,7 +186,6 @@ function getEndpointForUser(socket, roomname, senderid, callback) {
       asker.incomingMedia[sender.id] = incoming
 
       let iceCandidateQueue = iceCandidateQueues[sender.id]
-      console.log('for', iceCandidateQueue)
       if (iceCandidateQueue) {
         while (iceCandidateQueue.length) {
           let ice = iceCandidateQueue.shift()
@@ -186,7 +195,6 @@ function getEndpointForUser(socket, roomname, senderid, callback) {
 
       incoming.onIceCandidate = event => {
         let candidate = kurento.register.complexTypes.IceCandidates(event.candidate)
-        console.log('candidate')
         socket.emit('message', {
           event: 'candidate',
           userid: sender.id,
@@ -221,7 +229,6 @@ function receiveVideoFrom(socket, userid, roomName, sdpOffer, callback) {
         sdpAnswer: sdpAnswer
       })
       endpoint.gatherCandidates(err => {
-        // console.log('e') jalan
         if (err) return callback(err)
       })
     })
@@ -229,30 +236,21 @@ function receiveVideoFrom(socket, userid, roomName, sdpOffer, callback) {
 }
 
 function addIceCandidate(socket, senderid, roomName, iceCandidate, callback) {
-  console.log('a')
   let user = io.sockets.adapter.rooms.get(roomName).participants[socket.id]
 
   if (user != null) {
-    console.log('b')
     let candidate = kurento.register.complexTypes.IceCandidate(iceCandidate)
     if (senderid == user.id) {
-      console.log('d')
       if (user.outgoingMedia) {
-        console.log('f')
         user.outgoingMedia.addIceCandidate(candidate)
       } else {
-        console.log('g')
         iceCandidateQueues[user.id].push({candidate: candidate})
       }
     } else {
-      console.log('e')
       if (user.incomingMedia[senderid]) {
-        console.log('h')
         user.incomingMedia[senderid].addIceCandidate(candidate)
       } else {
-        console.log('h')
         if (!iceCandidateQueues[senderid]) {
-          console.log('i')
           iceCandidateQueues[senderid] = []
         }
         iceCandidateQueues[senderid].push({candidate: candidate})
@@ -260,7 +258,6 @@ function addIceCandidate(socket, senderid, roomName, iceCandidate, callback) {
     }
     return callback(null)
   } else {
-    console.log('c')
     return callback(new Error("addIceCandidate failed"))
   }
 }
@@ -287,6 +284,6 @@ app.use(cors(corsOpts))
 
 app.use(express.static('public'))
 
-app.listen(3000, () => {
+http.listen(3000, () => {
   console.log('App listen at http://192.168.226.33:3000')
 })
