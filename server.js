@@ -287,6 +287,6 @@ app.use(cors(corsOpts))
 
 app.use(express.static('public'))
 
-http.listen(3000, () => {
+app.listen(3000, () => {
   console.log('App listen at http://192.168.226.33:3000')
 })
