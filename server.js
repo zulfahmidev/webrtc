@@ -19,7 +19,7 @@ let argv = minimist(process.argv.slice(2), {
   default: {
     as_url: 'http://0.0.0.0:80',
     // ws_uri: 'ws://localhost:8888/kurento',
-    ws_uri: 'ws://webrtc.zulfahmidev.com:8888/kurento',
+    ws_uri: 'ws://34.149.100.153:8888/kurento',
   }
 })
 
