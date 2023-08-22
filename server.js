@@ -2,7 +2,7 @@ const express = require('express')
 let minimist = require('minimist')
 let kurento = require('kurento-client')
 const app = express()
-let http = require('http').Server(app)
+let http = require('http').createServer(app)
 let io = require('socket.io')(http, {
   cors: {
     origin: "*",
