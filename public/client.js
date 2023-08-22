@@ -9,7 +9,7 @@ let roomName
 let userName
 let participants = {}
 
-let socket = io()
+let socket = io('https://34.101.228.110:3000')
 
 btnRegister.onclick = () => {
   roomName = inputRoom.value
