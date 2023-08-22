@@ -17,9 +17,9 @@ let iceCandidateQueues = {}
 
 let argv = minimist(process.argv.slice(2), {
   default: {
-    as_url: 'http://0.0.0.0:80',
+    as_url: 'http://0.0.0.0:3000',
     // ws_uri: 'ws://localhost:8888/kurento',
-    ws_uri: 'ws://34.149.100.153:8888/kurento',
+    ws_uri: 'ws://34.101.228.110:8888/kurento',
   }
 })
 
@@ -117,28 +117,16 @@ function joinRoom(socket, username, roomname, callback) {
 }
 
 function getKurentoCLient(callback) {
-  console.log('a')
   if (kurentoClient !== null) {
-    console.log('b')
     return callback(null, kurentoClient)
   }
-  console.log('c', argv.ws_uri)
   let a = kurento(argv.ws_uri, (err, _kurentoClient) => {
-    console.log('d')
     if (err) {
-      console.log('e')
       return callback(err)
     }
     kurentoClient = _kurentoClient
     return callback(null, kurentoClient)
-  }).then((v) => {
-    console.log(v)
-  }).catch((res) => {
-    console.log(res)
-  }).finally(() => {
-    console.log('aaa')
   })
-  // console.log(a)
 }
 
 function getRoom(socket, roomname, callback) {
@@ -285,6 +273,6 @@ app.use(cors(corsOpts))
 
 app.use(express.static(path.join(__dirname, 'public')))
 
-http.listen(80, () => {
-  console.log('App listen at http://192.168.226.33:80')
+http.listen(3000, () => {
+  console.log('App listen at 3000')
 })
