@@ -1,5 +1,6 @@
 const express = require('express')
 let minimist = require('minimist')
+let path = require('path')
 let kurento = require('kurento-client')
 const app = express()
 let http = require('http').createServer(app)
@@ -282,7 +283,7 @@ const corsOpts = {
 
 app.use(cors(corsOpts))
 
-app.use(express.static('public'))
+app.use(express.static(path.join(__dirname, 'public')))
 
 http.listen(3000, () => {
   console.log('App listen at http://192.168.226.33:3000')
