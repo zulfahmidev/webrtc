@@ -11,13 +11,14 @@ let io = require('socket.io')(http, {
   }
 })
 const cors = require('cors');
+let port = 3000
 
 let kurentoClient = null
 let iceCandidateQueues = {}
 
 let argv = minimist(process.argv.slice(2), {
   default: {
-    as_url: 'http://0.0.0.0:3000',
+    as_url: 'http://0.0.0.0:'+port,
     // ws_uri: 'ws://localhost:8888/kurento',
     ws_uri: 'ws://34.101.228.110:8888/kurento',
   }
@@ -273,6 +274,6 @@ app.use(cors(corsOpts))
 
 app.use(express.static(path.join(__dirname, 'public')))
 
-http.listen(3000, () => {
-  console.log('App listen at 3000')
+http.listen(port, () => {
+  console.log('App listen on port '+port)
 })
