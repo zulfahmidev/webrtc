@@ -11,7 +11,7 @@ let io = require('socket.io')(http, {
   }
 })
 const cors = require('cors');
-let port = 3000
+let port = 80
 
 let kurentoClient = null
 let iceCandidateQueues = {}
