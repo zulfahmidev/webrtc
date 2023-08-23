@@ -82,6 +82,7 @@ function receiveVideo(userid, username) {
     }
   }
 
+  console.log('e')
   let options = {
     // localVideo: video,
     remoteVideo: video,
@@ -89,14 +90,16 @@ function receiveVideo(userid, username) {
     mediaConstraints: constraints
   }
   user.rtcPeer = new kurentoUtils.WebRtcPeerRecvonly(options, function(err) {
+    console.log('f')
     if (err) {
+      console.log('g')
       return console.log(err)
     }
     user.rtcPeer.generateOffer(onOffer)
   })
 
   function onOffer(err, offer, wp) {
-    console.log('b')
+    console.log('h')
     let message = {
       event: 'receiveVideoFrom',
       userid: user.id,
@@ -107,7 +110,7 @@ function receiveVideo(userid, username) {
   }
 
   function onIceCandidate(candidate, wp) {
-    // console.log('a', candidate)
+    console.log('a candidate')
     let message = {
       event: 'candidate',
       userid: user.id,
@@ -120,7 +123,6 @@ function receiveVideo(userid, username) {
 }
 
 function onExisttingParticipants(userid, existingUsers) {
-  console.log('a')
   let video = document.createElement('video')
   let div = document.createElement('div')
   div.className = 'videoContainer'
@@ -142,7 +144,7 @@ function onExisttingParticipants(userid, existingUsers) {
   participants[user.id] = user
 
   let constraints = {
-    audio: false,
+    audio: true,
     video: {
       mandatory: {
         maxWidth: 328,
@@ -155,12 +157,16 @@ function onExisttingParticipants(userid, existingUsers) {
   let options = {
     localVideo: video,
     // remoteVideo: video,
+    sendSource: 'window',
     onicecandidate: onIceCandidate,
     mediaConstraints: constraints
   }
 
+  console.log('a')
   user.rtcPeer = new kurentoUtils.WebRtcPeerSendonly(options, function(err) {
+    console.log('b')
     if (err) {
+      console.log('c')
       return console.log(err)
     }
     
@@ -172,7 +178,7 @@ function onExisttingParticipants(userid, existingUsers) {
   });
 
   function onOffer(err, offer, wp) {
-    console.log('b')
+    console.log('d')
     let message = {
       event: 'receiveVideoFrom',
       userid: user.id,
@@ -183,6 +189,7 @@ function onExisttingParticipants(userid, existingUsers) {
   }
 
   function onIceCandidate(candidate, wp) {
+    console.log('b candidate')
     let message = {
       event: 'candidate',
       userid: user.id,
@@ -195,6 +202,7 @@ function onExisttingParticipants(userid, existingUsers) {
 }
 
 function onReceiveVideoAnswer(senderid, sdpAnswer) {
+    console.log('answer')
   // console.log(participants[senderid])
   participants[senderid].rtcPeer.processAnswer(sdpAnswer)
 }

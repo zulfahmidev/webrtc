@@ -11,7 +11,7 @@ let io = require('socket.io')(http, {
   }
 })
 const cors = require('cors');
-let port = 80
+let port = 3000
 
 let kurentoClient = null
 let iceCandidateQueues = {}
@@ -20,7 +20,7 @@ let argv = minimist(process.argv.slice(2), {
   default: {
     as_url: 'http://0.0.0.0:'+port,
     // ws_uri: 'ws://localhost:8888/kurento',
-    ws_uri: 'ws://34.101.228.110:8888/kurento',
+    ws_uri: 'ws://34.149.100.153:8888/kurento',
   }
 })
 
@@ -79,6 +79,7 @@ function joinRoom(socket, username, roomname, callback) {
       }
 
       user.outgoingMedia.onIceCandidate = event => {
+        console.log('halah')
         let candidate = kurento.register.complexTypes.iceCandidates(event.candidate)
         socket.emit('message', {
           event: 'candidate',
@@ -108,10 +109,6 @@ function joinRoom(socket, username, roomname, callback) {
         existingUsers: existingUsers,
         userid: user.id
       })
-      // if (existingUsers.length > 0) {
-      // }
-
-      // console.log(myRoom)
       myRoom.participants[user.id] = user
     })
   })
@@ -175,16 +172,21 @@ function getEndpointForUser(socket, roomname, senderid, callback) {
 
       asker.incomingMedia[sender.id] = incoming
 
+      // console.log(incoming)
       let iceCandidateQueue = iceCandidateQueues[sender.id]
       if (iceCandidateQueue) {
+        console.log('b')
         while (iceCandidateQueue.length) {
           let ice = iceCandidateQueue.shift()
+          console.log('i')
           incoming.addIceCandidate(ice.candidate)
         }
       }
+      console.log('c')
 
       incoming.onIceCandidate = event => {
-        let candidate = kurento.register.complexTypes.IceCandidates(event.candidate)
+        console.log('d')
+        let candidate = kurento.register.complexTypes.iceCandidates(event.candidate)
         socket.emit('message', {
           event: 'candidate',
           userid: sender.id,
@@ -192,8 +194,11 @@ function getEndpointForUser(socket, roomname, senderid, callback) {
         })
       }
 
+      console.log('f')
       sender.outgoingMedia.connect(incoming, err => {
+        console.log('g')
         if (err) {
+          console.log('h')
           return callback(err)
         }
         return callback(null, incoming)
@@ -210,6 +215,7 @@ function receiveVideoFrom(socket, userid, roomName, sdpOffer, callback) {
 
     endpoint.processOffer(sdpOffer, (err, sdpAnswer) => {
       if (err) {
+        console.log(err)
         return false;
       }
 
